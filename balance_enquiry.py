@@ -26,9 +26,8 @@ import sqlite3
         conn.execute("INSERT INTO WATSONCREDENTIALS VALUES ('nicholas', 'nicholas', 10000), ('gilang', 'gilang', 20000);")
         conn.commit()
         print("Records inserted successfully!")
-"""
 
-def get_balance(username, password):
+def get_balance(password):
     conn = sqlite3.connect('database.db')   
     data = {"users": []}
     cursor = conn.execute("SELECT BALANCE, PASS FROM WATSONCREDENTIALS WHERE PASS = ? LIMIT 1", [password])
@@ -48,3 +47,40 @@ def get_balance(username, password):
 
 
     conn.close()
+"""
+
+"""
+    True function starts here.
+"""
+
+def helper(dict):
+    conn = sqlite3.connect('database.db')   
+    data = {"users": []}
+    cursor = conn.execute("SELECT * FROM WATSONCREDENTIALS WHERE UNAME = ? LIMIT 1", [dict['username']])
+    cursor = cursor.fetchone()
+
+    print(cursor)
+
+    if not cursor:
+        conn.close()
+        return {
+            "message": "Your username is wrong!"
+        }
+    
+    if dict['password'] == cursor[1]:
+        conn.close()
+        data["users"].append({"username": cursor[0], "password": cursor[1], "balance": cursor[2]})
+        return {
+            "balance": data["users"][0]["balance"],
+            "message": "Successful login!"
+        }
+    else:
+        conn.close()
+        return {
+            "message": "Your password is wrong!"
+        }
+    
+    # Will always return this if connection fails.
+    return {
+        "message": "Wrong username and or password!"
+    }

@@ -1,3 +1,6 @@
+"""
+    Remove the comment when you have found the way to integrate more than 1 function!
+
 from ibm_watson import DiscoveryV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -30,3 +33,4 @@ def get_answer(environment_id, collection_id, question):
 
     #TODO: handler when question returns no asnwer
     return { 'message': answer}
+"""
