@@ -57,19 +57,30 @@ def helper(dict):
     conn = sqlite3.connect('database.db')   
     data = {"users": []}
     cursor = conn.execute("SELECT * FROM WATSONCREDENTIALS WHERE UNAME = ? LIMIT 1", [dict['username']])
+    cursor = cursor.fetchone()
 
-    # Compare Username and Password
-    for row in cursor:
-        if dict['username'] == row[0] and dict['password'] == row[1]:
-            data["users"].append({"username": dict['username'], "password": dict['password'], "balance": row[2]})
+    print(cursor)
 
-            return {
-                "balance": data["users"][0]["balance"],
-                "message": "Successful login!"
-            }
-
+    if not cursor:
+        conn.close()
+        return {
+            "message": "Your username is wrong!"
+        }
+    
+    if dict['password'] == cursor[1]:
+        conn.close()
+        data["users"].append({"username": cursor[0], "password": cursor[1], "balance": cursor[2]})
+        return {
+            "balance": data["users"][0]["balance"],
+            "message": "Successful login!"
+        }
+    else:
+        conn.close()
+        return {
+            "message": "Your password is wrong!"
+        }
+    
+    # Will always return this if connection fails.
     return {
         "message": "Wrong username and or password!"
     }
-
-    conn.close()
